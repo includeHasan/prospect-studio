@@ -6,6 +6,28 @@ Format: [Semantic Versioning](https://semver.org) — `MAJOR.MINOR.PATCH`
 
 ---
 
+## [1.1.0] — 2026-04-05
+
+### Bulk Lead Discovery
+
+**New Agent**
+- `discovery` — Conversational bulk prospecting specialist. Asks 2-3 ICP questions, searches for matching companies via SerpAPI, quick-scores 15-50 companies, presents a summary table, and deep-dives selected ones via the research agent. Supports industry filter, ICP criteria, competitor lookalike, and CSV import entry points.
+
+**New Skills (2)**
+- `prospect-discovery` — Bulk lead discovery entry point ("find me leads", "discover prospects", "who should I sell to")
+- `csv-import` — Import CSV/spreadsheet of companies with flexible column mapping for enrichment and scoring
+
+**Updated**
+- `pipeline-review` — Now surfaces unqualified prospects from bulk discovery, grouped by batch
+- `templates/CLAUDE.md` — Added bulk discovery workflow, new skills, discovery agent, and new frontmatter tags
+
+**New Frontmatter Tags**
+- `source: bulk-discovery|csv-import|manual` — how the lead was discovered
+- `discovery_batch: YYYY-MM-DD-[topic]` — groups leads from the same discovery run
+- `status: prospect` — discovered but not yet deep-dived
+
+---
+
 ## [1.0.0] — 2026-04-05
 
 ### Initial Release

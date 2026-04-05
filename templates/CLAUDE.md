@@ -37,55 +37,68 @@ exports/             # Exported documents (DOCX, PPTX, XLSX, CSV)
 
 ## Available Skills
 
-### `/lead-agent:daily-briefing`
+### `/prospect-studio:daily-briefing`
 Morning briefing from workspace state — tasks due, overdue items, goal progress, lead pipeline.
 - "Good morning" / "Brief me" / "What's on my plate today?"
 - "Daily standup" / "Catch me up"
 
-### `/lead-agent:meeting-notes`
+### `/prospect-studio:meeting-notes`
 Capture structured meeting notes with auto-extracted action items and optional task creation.
 - "Take meeting notes"
 - "Log this meeting with [person/company]"
 - "Convert these notes into tasks"
 
-### `/lead-agent:pipeline-review`
+### `/prospect-studio:pipeline-review`
 Full lead pipeline view — status distribution, stale contacts, hot leads, recommended next actions.
 - "Review my pipeline"
 - "Who should I follow up with?"
 - "Pipeline report"
 
-### `/lead-agent:competitive-intel`
+### `/prospect-studio:competitive-intel`
 Research competitors, build comparison matrices, identify market gaps, generate battlecards.
 - "Competitive analysis for [market]"
 - "Battlecard for [competitor]"
 - "Who are the players in [space]?"
 
-### `/lead-agent:weekly-report`
+### `/prospect-studio:weekly-report`
 Generate weekly status report from workspace activity — optionally export as PPTX.
 - "Weekly report" / "Week in review"
 - "What did I accomplish this week?"
 - "Export weekly status as PowerPoint"
 
-### `/lead-agent:lead-research`
+### `/prospect-studio:lead-research`
 Research and qualify leads, gather company information, find contacts, build lead profiles.
 - "Research [company] as a lead"
 - "Find leads in [industry]"
 - "Qualify this prospect"
 
-### `/lead-agent:prd-writer`
+### `/prospect-studio:prospect-discovery`
+Discover potential customers in bulk — the discovery agent asks about your business, finds matching companies, and scores them.
+- "Find me leads" / "Discover prospects"
+- "Find [industry] companies for my business"
+- "Who should I sell to?"
+- "Bulk lead discovery"
+
+### `/prospect-studio:csv-import`
+Import a CSV of companies for enrichment and scoring with flexible column mapping.
+- "Import leads from [file path]"
+- "Process this company list"
+- "Enrich this CSV"
+
+### `/prospect-studio:prd-writer`
 Create PRDs and FRDs with proper structure, user stories, and acceptance criteria.
 - "Create a PRD for [feature]"
 - "Write FRD for [feature]"
 - "Add requirements to [document]"
 
-### `/lead-agent:task-manager`
+### `/prospect-studio:task-manager`
 Create, organize, and track tasks and projects with deadlines and progress.
 - "Create task: [description]"
 - "Show my tasks for today"
 - "Mark task complete: [task name]"
 - "Update project status"
 
-### `/lead-agent:goal-tracker`
+### `/prospect-studio:goal-tracker`
 Set and track goals with OKRs, quarterly planning, and progress reviews.
 - "Set Q2 OKRs"
 - "Review my goals"
@@ -107,6 +120,16 @@ Set and track goals with OKRs, quarterly planning, and progress reviews.
 5. **Draft outreach** with outreach agent → personalized 4-touch email sequence
 6. **Log responses** as meeting notes with `meeting-notes` skill
 7. **Track stage**: `new` → `contacted` → `qualified` → `nurturing` → `closed`
+
+### Bulk Lead Discovery
+1. **Discover** — "find me leads" → discovery agent asks about your business and ICP
+2. **Score** — agent searches via SerpAPI, quick-scrapes homepages, scores 15-50 companies
+3. **Select** — review summary table, pick companies to deep-dive (by number or score threshold)
+4. **Deep-dive** — selected companies get full lead profiles via research agent
+5. **Outreach** — "draft outreach for [company]" for any qualified lead
+6. **CSV import** — "import leads from [path]" to enrich an external company list
+
+Bulk-discovered leads are tagged with `source: bulk-discovery` and `discovery_batch: YYYY-MM-DD-[topic]` in frontmatter. They appear in pipeline review under "Unqualified Prospects" until deep-dived.
 
 ### Market & Competitive Research
 1. "Competitive analysis for [market]" → analyst agent
@@ -133,6 +156,7 @@ Delegate to these specialized subagents for focused work:
 | Subagent | Trigger With | Key Tools |
 |----------|-------------|-----------|
 | `research` | "Research [company]", "Find contacts at [company]", "Qualify this lead" | scrape_company_intel, find_contacts, SerpAPI, WebFetch, Write, Edit |
+| `discovery` | "Find me leads", "Discover companies in [industry]", "Bulk lead discovery", "Find prospects" | SerpAPI, scrape_url, Glob, Read, Agent (delegates to research) |
 | `planning` | "Create a PRD for...", "Write FRD for...", "Define requirements for..." | Write, Edit |
 | `outreach` | "Draft outreach for [lead]", "Write follow-up email", "Create email sequence" | Write, Edit, SerpAPI, WebFetch |
 | `analyst` | "Competitive analysis", "Market research", "Who are competitors in [space]", "Battlecard for [company]" | SerpAPI, WebFetch, Write |
@@ -197,9 +221,11 @@ title: Document Title
 type: lead|prd|frd|task|goal|note
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
-status: draft|active|completed|archived
+status: draft|active|completed|archived|prospect
 priority: urgent|high|medium|low
 tags: []
+source: manual|bulk-discovery|csv-import
+discovery_batch: YYYY-MM-DD-[topic]
 ---
 ```
 

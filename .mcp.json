@@ -1,0 +1,23 @@
+{
+  "mcpServers": {
+    "web-scraper": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/mcp-server/server.js"],
+      "env": {
+        "NODE_PATH": "${CLAUDE_PLUGIN_DATA}/node_modules",
+        "WORKSPACE_ROOT": "${user_config.workspace_root}"
+      }
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
+    },
+    "serpapi": {
+      "url": "https://mcp.serpapi.com/mcp",
+      "type": "remote",
+      "headers": {
+        "Authorization": "Bearer ${user_config.serpapi_key}"
+      }
+    }
+  }
+}

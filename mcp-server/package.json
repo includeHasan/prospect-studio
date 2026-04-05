@@ -1,0 +1,12 @@
+{
+  "name": "lead-agent-web-scraper",
+  "version": "1.0.0",
+  "description": "Web scraper MCP server for lead-agent plugin — HTTP fetch + cheerio, Playwright MCP fallback hints",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "cheerio": "^1.2.0",
+    "zod": "^3.23.0"
+  }
+}

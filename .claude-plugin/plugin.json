@@ -1,0 +1,21 @@
+{
+  "name": "prospect-studio",
+  "version": "1.0.0",
+  "description": "B2B lead generation, market research, and business document workspace for Claude Code",
+  "author": {
+    "name": "HasanKhan"
+  },
+  "repository": "https://github.com/includeHasan/prospect-studio",
+  "license": "MIT",
+  "keywords": ["lead-generation", "sales", "market-research", "b2b", "crm", "prd"],
+  "userConfig": {
+    "serpapi_key": {
+      "description": "SerpAPI key for web research — get from serpapi.com (Dashboard → API Key)",
+      "sensitive": true
+    },
+    "workspace_root": {
+      "description": "Absolute path to your workspace directory, e.g. /home/user/leads or D:/work/leads",
+      "sensitive": false
+    }
+  }
+}

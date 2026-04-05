@@ -33,13 +33,23 @@ A Claude Code plugin with 5 specialized subagents, 10 skills, a web scraper MCP 
 
 ## Install
 
-```bash
-# Install the plugin (user scope — available across all projects)
-claude plugin install github:includeHasan/prospect-studio
+Run these three commands in Claude Code (not the terminal):
 
-# You'll be prompted to enter:
-# 1. SerpAPI key (stored in OS keychain — never written to disk)
-# 2. Workspace root path (e.g. D:/work/leads or /home/user/leads)
+```
+/plugin marketplace add github:includeHasan/prospect-studio
+/plugin install prospect-studio@prospect-studio-marketplace
+/reload-plugins
+```
+
+You'll be prompted to enter:
+1. SerpAPI key (stored in OS keychain — never written to disk)
+2. Workspace root path (e.g. `D:/work/leads` or `/home/user/leads`)
+
+**For local install** (if you cloned the repo):
+```
+/plugin marketplace add /path/to/prospect-studio
+/plugin install prospect-studio@prospect-studio-marketplace
+/reload-plugins
 ```
 
 ---
@@ -129,11 +139,18 @@ your-workspace/
 
 ## Team Usage
 
-Each team member:
-1. Installs the plugin: `claude plugin install github:includeHasan/prospect-studio`
-2. Enters their own SerpAPI key when prompted
-3. Sets their workspace root path when prompted
-4. Runs `/prospect-studio:setup` in their workspace directory
+Each team member runs these in Claude Code:
+
+```
+/plugin marketplace add github:includeHasan/prospect-studio
+/plugin install prospect-studio@prospect-studio-marketplace
+/reload-plugins
+```
+
+Then in their workspace directory:
+```
+/prospect-studio:setup
+```
 
 SerpAPI keys are stored per-user in the OS keychain. Workspace data stays local.
 
@@ -141,8 +158,12 @@ SerpAPI keys are stored per-user in the OS keychain. Workspace data stays local.
 
 ## Update
 
-```bash
-claude plugin update prospect-studio
+Pull the latest from GitHub, then in Claude Code:
+
+```
+/plugin marketplace add github:includeHasan/prospect-studio
+/plugin install prospect-studio@prospect-studio-marketplace
+/reload-plugins
 ```
 
 Dependencies auto-reinstall on next session start if `package.json` changed.
@@ -152,7 +173,12 @@ Dependencies auto-reinstall on next session start if `package.json` changed.
 ## Contributing
 
 1. Fork the repo
-2. Test changes locally: `claude --plugin-dir ./prospect-studio`
+2. Test changes locally:
+   ```
+   /plugin marketplace add /path/to/prospect-studio
+   /plugin install prospect-studio@prospect-studio-marketplace
+   /reload-plugins
+   ```
 3. Run `/prospect-studio:setup` in a test workspace to validate
 4. Bump `version` in `.claude-plugin/plugin.json`
 5. Update `CHANGELOG.md`

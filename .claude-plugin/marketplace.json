@@ -1,0 +1,13 @@
+{
+  "name": "prospect-studio-marketplace",
+  "owner": {
+    "name": "HasanKhan"
+  },
+  "plugins": [
+    {
+      "name": "prospect-studio",
+      "source": ".",
+      "description": "B2B lead generation, market research, and business document workspace for Claude Code"
+    }
+  ]
+}

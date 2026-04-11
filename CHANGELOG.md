@@ -6,6 +6,25 @@ Format: [Semantic Versioning](https://semver.org) — `MAJOR.MINOR.PATCH`
 
 ---
 
+## [1.6.0] — 2026-04-11
+
+### Install & cross-platform fixes
+
+- **Fixed `marketplace.json` schema** — plugin `source` must start with `./` (bare `"."` fails validation). Local installs via `/plugin marketplace add` now work.
+- **Fixed `plugin.json` `userConfig` schema** — every entry now has `type` (`string` / `directory`) and `title` fields required by the current plugin manifest schema. Previous installs failed with "Invalid option" validation errors on every user config field.
+- **Fixed Windows hook execution** — `install-deps.sh` is now invoked as `bash "${CLAUDE_PLUGIN_ROOT}/scripts/install-deps.sh"` instead of as a bare executable, so it runs under Git Bash on Windows. Previously the hook silently failed, leaving `${CLAUDE_PLUGIN_DATA}/node_modules` empty and both local MCP servers (`web-scraper`, `frappe`) unable to start.
+- **Portable Python hooks** — `deadline-monitor.py`, `track-document.py`, and `track-search.py` are now invoked through a `bash -c` trampoline that detects `python3` / `python` / `py` in that order, so the hooks work on macOS, Linux, and Windows regardless of which Python alias is installed. Missing Python exits 0 silently as before.
+
+### SerpAPI: Google Maps Local Business engine is first-class
+
+- **Both SerpAPI engines are now documented and enforced across agents**:
+  - `engine: "google"` — Google Web Search, default for digital/non-local ICPs (SaaS, funded startups, LinkedIn URL discovery, news/funding lookups).
+  - `engine: "google_maps"` — Google Maps Local Business, **required** for any brick-and-mortar / location-bound ICP (clinics, gyms, restaurants, salons, auto shops, retail, local services). Returns structured place data: name, address, phone, website, rating, review count, category, hours.
+- Rule: if the ICP is location-bound, start with `google_maps`; a single research pass may use both (Maps for structured place data, Web for news/people).
+- Updated in lockstep: `templates/CLAUDE.md` (SerpAPI Usage section), `agents/discovery.md` (Step 2 query building), `agents/research.md` (Step 1 search), `agents/sales.md` (orchestrator sanity-check tool note).
+
+---
+
 ## [1.5.0] — 2026-04-11
 
 ### Core Sales Agent (Orchestrator)

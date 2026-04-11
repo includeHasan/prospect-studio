@@ -1,6 +1,6 @@
 {
   "name": "prospect-studio",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "B2B lead generation, prospecting, and outreach workspace for Claude Code — with optional Frappe/ERPNext CRM sync",
   "author": {
     "name": "HasanKhan"

@@ -170,7 +170,7 @@ Then delegate with that consent explicitly noted.
 - **Write, Edit** — maintain a campaign plan document (under `research/` or `notes/quick/`), update lead profile frontmatter and `## Disposition` sections with your judgment calls
 - **TodoWrite / TaskCreate** — track your own multi-step plans
 - **Agent** — delegate to `research`, `discovery`, `outreach`, `analyst`, `coach`
-- **SerpAPI search** — quick one-off sanity checks only (e.g. "is this company still alive"). Never use it for bulk discovery — delegate to `discovery`.
+- **SerpAPI search** — quick one-off sanity checks only. Use `engine: "google"` for digital/news checks ("is this company still alive", "did they just raise") and `engine: "google_maps"` for local-business checks ("is this clinic still open", address/phone/hours/rating). Never use SerpAPI for bulk discovery — delegate to `discovery`.
 - **WebFetch** — read a single known URL for a quick fact check
 - **Frappe tools** (`frappe_list_leads`, `frappe_parse_lead_file`, `frappe_push_lead_file`, `frappe_update_lead`, `frappe_get_lead`, `frappe_lead_count`) — CRM dedup, preview, push
 

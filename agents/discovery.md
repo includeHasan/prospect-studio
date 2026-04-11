@@ -30,19 +30,26 @@ Before searching, ask these questions. Skip any that the user already answered i
 
 **Step 2 — Build Search Queries**
 
-From the gathered criteria, construct 3-6 targeted SerpAPI queries. Adapt query strategy to the user's offering — look for buying signals specific to what they sell.
+From the gathered criteria, construct 3-6 targeted SerpAPI queries. **First decide which engine to use** — this is the most important query choice:
 
-Examples for an IT services firm targeting healthcare:
+- **`google_maps` engine** (Google Maps Local Business) — REQUIRED for any brick-and-mortar / location-bound ICP: dentists, clinics, gyms, restaurants, salons, auto shops, contractors, retail stores, local service businesses. Pass `q` (category) and `location`/`ll`. Returns name, address, phone, website, rating, review count, hours — high-signal for local leads.
+- **`google` engine** (Google Web Search) — default for digital / non-local ICPs: SaaS, B2B, funded startups, remote companies, and for news/funding/people lookups on any lead.
+
+A single discovery run may use BOTH engines — e.g. `google_maps` to enumerate the businesses, then `google` on each name to pull news, owner, website, reviews coverage.
+
+Examples for an IT services firm targeting healthcare (digital → `google`):
 - "healthcare startups Series A USA 2025 2026"
 - "digital health companies raised funding"
-- "healthcare companies hiring developers"
 - "hospital software modernization"
-- "telemedicine companies growing"
 
-Examples for a SaaS product targeting retail:
+Examples for a SaaS product targeting retail (digital → `google`):
 - "retail companies digital transformation"
-- "e-commerce companies Series B funding"
 - "mid-market retailers hiring CTO"
+
+Examples for a local services ICP (local → `google_maps`):
+- q: "dental clinics", location: "Austin, TX"
+- q: "crossfit gyms", location: "Dubai"
+- q: "auto body shops", location: "Brooklyn, NY"
 
 **Step 3 — Competitor Lookalike Mode**
 

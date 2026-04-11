@@ -356,7 +356,13 @@ contact1_linkedin: https://linkedin.com/in/janedoe
 
 ## SerpAPI Usage
 
-For all company/market/contact web research, use the SerpAPI MCP search tool.
-- Pass `q` as the search query parameter
-- Prefer it over generic web tools for business research
-- Always cite result URLs in lead profiles and research documents
+For all company/market/contact web research, use the SerpAPI MCP search tool. **Two engines are first-class and both matter — pick based on the lead type:**
+
+1. **Google Web Search** (`engine: "google"`) — default for everything digital: SaaS, B2B, funded startups, remote companies, news/funding/people lookups, LinkedIn URL discovery.
+2. **Google Maps Local Business** (`engine: "google_maps"`, with `type: "search"` and a `ll` lat/long or location query) — **required** for any brick-and-mortar / local ICP: clinics, gyms, restaurants, salons, auto shops, contractors, retail, local service businesses. Returns place name, address, phone, website, rating, review count, category, hours — all high-signal for lead profiles. Never try to scrape these off Google SERPs; use the Maps engine directly.
+
+**Rules:**
+- If the user's ICP is location-bound ("dentists in Austin", "gyms in Dubai"), start with `google_maps`. If it's not ("B2B SaaS in fintech"), start with `google`.
+- A single discovery sweep may use *both* engines — e.g. `google_maps` to enumerate local businesses, then `google` on each name to find owner/website/news.
+- Always pass `q` (and `ll`/`location` for maps). Always cite result URLs (or Google Maps place URLs) in lead profiles and research documents.
+- Prefer SerpAPI over generic web tools for any business research.

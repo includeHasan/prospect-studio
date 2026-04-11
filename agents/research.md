@@ -20,10 +20,13 @@ Research potential leads, gather company intelligence, qualify prospects, and bu
 
 ### Step 1 — Identify & Search (free tier first)
 - Use `scrape_company_intel` first to get emails, tech stack, and social links directly from the company website before running web searches
-- Use SerpAPI MCP for all company/contact web research — always cite result URLs in the lead profile
+- Use SerpAPI MCP for all company/contact web research — always cite result URLs in the lead profile. **Both engines are first-class:**
+  - **`engine: "google"`** — Google Web Search. Default for digital/non-local leads: news, funding rounds, leadership, tech stack, pain points, LinkedIn URL discovery.
+  - **`engine: "google_maps"`** — Google Maps Local Business. REQUIRED for any local / brick-and-mortar lead (clinic, gym, restaurant, retail, local service). Pass `q` + `location` (or `ll`). Returns place name, address, phone, website, rating, review count, category, hours — all high-signal fields for the lead profile. Never substitute Google web results for Maps on a local lead; you'll miss the structured data.
+  - A single lead research pass often uses both — `google_maps` to pull the structured place record, then `google` on the company name for news/funding/people.
 - Search for: company overview, recent news, funding, leadership, tech stack, pain points
 - Find decision-makers (CEO, CTO, VP Sales, Head of Growth, etc.)
-- **Never scrape LinkedIn with the bundled `web-scraper` or Playwright.** Use SerpAPI to find LinkedIn URLs only. Actual LinkedIn data comes from Apify (see step 1b).
+- **Never scrape LinkedIn with the bundled `web-scraper` or Playwright.** Use SerpAPI (`engine: "google"`) to find LinkedIn URLs only. Actual LinkedIn data comes from Apify (see step 1b).
 
 ### Step 1b — Apify Enrichment (PAID, OPT-IN, HOT LEADS ONLY)
 

@@ -10,11 +10,43 @@
           {
             "type": "command",
             "command": "bash -c 'PY=$(command -v python3 || command -v python || command -v py); [ -n \"$PY\" ] && \"$PY\" \"${CLAUDE_PLUGIN_ROOT}/scripts/deadline-monitor.py\" || exit 0'"
+          },
+          {
+            "type": "command",
+            "command": "bash -c 'PY=$(command -v python3 || command -v python || command -v py); [ -n \"$PY\" ] && \"$PY\" \"${CLAUDE_PLUGIN_ROOT}/scripts/record-event.py\" session_start || exit 0'"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'PY=$(command -v python3 || command -v python || command -v py); [ -n \"$PY\" ] && \"$PY\" \"${CLAUDE_PLUGIN_ROOT}/scripts/record-event.py\" prompt || exit 0'"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'PY=$(command -v python3 || command -v python || command -v py); [ -n \"$PY\" ] && \"$PY\" \"${CLAUDE_PLUGIN_ROOT}/scripts/record-event.py\" stop || exit 0'"
           }
         ]
       }
     ],
     "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'PY=$(command -v python3 || command -v python || command -v py); [ -n \"$PY\" ] && \"$PY\" \"${CLAUDE_PLUGIN_ROOT}/scripts/record-event.py\" tool_use || exit 0'"
+          }
+        ]
+      },
       {
         "matcher": "Write|Edit",
         "hooks": [

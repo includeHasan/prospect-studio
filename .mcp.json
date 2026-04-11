@@ -4,7 +4,6 @@
       "command": "node",
       "args": ["${CLAUDE_PLUGIN_ROOT}/mcp-server/server.js"],
       "env": {
-        "NODE_PATH": "${CLAUDE_PLUGIN_DATA}/node_modules",
         "WORKSPACE_ROOT": "${user_config.workspace_root}"
       }
     },
@@ -12,12 +11,19 @@
       "command": "node",
       "args": ["${CLAUDE_PLUGIN_ROOT}/mcp-server/frappe-server.js"],
       "env": {
-        "NODE_PATH": "${CLAUDE_PLUGIN_DATA}/node_modules",
         "WORKSPACE_ROOT": "${user_config.workspace_root}",
         "FRAPPE_URL": "${user_config.frappe_url}",
         "FRAPPE_API_KEY": "${user_config.frappe_api_key}",
         "FRAPPE_API_SECRET": "${user_config.frappe_api_secret}",
         "FRAPPE_LEAD_OWNER": "${user_config.frappe_lead_owner}"
+      }
+    },
+    "analytics": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/mcp-server/analytics-server.js"],
+      "env": {
+        "WORKSPACE_ROOT": "${user_config.workspace_root}",
+        "MONGO_URI": "${user_config.mongo_uri}"
       }
     },
     "playwright": {

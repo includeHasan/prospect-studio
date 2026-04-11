@@ -6,6 +6,43 @@ Format: [Semantic Versioning](https://semver.org) — `MAJOR.MINOR.PATCH`
 
 ---
 
+## [1.7.0] — 2026-04-11
+
+### Analytics: session telemetry + duplicate-lead detection
+
+**New MCP server** `analytics` (`mcp-server/analytics-server.js`) — mongoose-backed event store.
+- Connects to MongoDB via `MONGO_URI` user config (new, optional, sensitive)
+- Mongoose `Event` model indexed by `session_id`, `timestamp`, `type`, `actor`, `workspace`
+- Tools exposed to agents:
+  - `analytics_flush` — JSONL → Mongo import + truncate
+  - `analytics_query` — filter events by type/actor/session/date
+  - `analytics_summary` — aggregate counts by type and actor over a window
+  - `analytics_session_report` — full report for one session (prompts, tool calls, agent delegations, lead touches, duration)
+  - `analytics_prompts` — last N user prompts
+  - `analytics_duplicates` — scans `documents/leads/` for lead profiles that share a normalized company name or website domain
+  - `analytics_pending` — peek at unflushed JSONL
+- If `mongo_uri` is blank, Mongo-backed tools return a "not configured" error but the recording pipeline continues writing JSONL locally — configure Mongo later and `analytics_flush` will import retroactively.
+
+**Recording pipeline (automatic, hot-path-safe)** — four hooks feed a single Python recorder.
+- New script `scripts/record-event.py` — appends one JSON line per event to `${WORKSPACE_ROOT}/.analytics/events.jsonl`. Reads hook context from stdin, exits 0 on any error.
+- New hooks wired in `hooks/hooks.json`:
+  - `UserPromptSubmit` → records `type: "prompt"`, `actor: "user"` with the prompt text
+  - `SessionStart` → records `type: "session_start"`
+  - `Stop` → records `type: "stop"`
+  - `PostToolUse` (unmatched) → records `type: "tool_use"` for every tool call, with `actor = tool_name` (captures Read, Write, Bash, Task → agent delegations, all MCP calls, etc.)
+- Payload is truncated (2000 chars for tool input, 4000 for prompts, 500-char response preview) to keep JSONL readable.
+- Agent invocations are recorded as `tool_use` events with `actor: "Task"` and `payload.subagent_type` — the analytics agent reconstructs the delegation graph from these.
+
+**New agent** `analytics` (`agents/analytics.md`) — read-only telemetry auditor.
+- Distinct from the existing `analyst` agent (which does market research, not workspace telemetry).
+- Tool allowlist: only the `analytics_*` MCP tools + `Read`/`Grep`/`Glob`/`Bash`. `disallowedTools`: `Write`, `Edit`, all Frappe push tools — cannot mutate anything.
+- Produces concise markdown reports (top-line numbers, detail, one follow-up) instead of raw JSON dumps.
+- Use cases: "what did I do today", "how many tool calls this week", "which agents do I use most", "find duplicate leads", "full report for my last session", "show me my prompts".
+
+**Dependency added**: `mongoose ^8.8.0` in `mcp-server/package.json`. The bundled local MCP servers share a single install tree under `${CLAUDE_PLUGIN_DATA}/node_modules`, so it's available to any server that imports it.
+
+---
+
 ## [1.6.0] — 2026-04-11
 
 ### Install & cross-platform fixes

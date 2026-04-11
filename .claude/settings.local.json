@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rm D:/projects/prospect-studio/agents/planning.md)",
+      "Bash(rm -rf D:/projects/prospect-studio/skills/prd-writer D:/projects/prospect-studio/skills/task-manager D:/projects/prospect-studio/skills/goal-tracker)",
+      "Read(//c/Users/HasanKhan/.claude/plugins/cache/prospect-studio-marketplace/prospect-studio/1.5.0//**)",
+      "Read(//c/Users/HasanKhan/.claude/plugins/cache/prospect-studio-marketplace/prospect-studio/1.5.0/mcp-server//**)"
+    ]
+  }
+}

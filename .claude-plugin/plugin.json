@@ -1,6 +1,6 @@
 {
   "name": "prospect-studio",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "B2B lead generation, prospecting, and outreach workspace for Claude Code — with optional Frappe/ERPNext CRM sync",
   "author": {
     "name": "HasanKhan"
@@ -50,6 +50,12 @@
       "title": "Workspace Root",
       "description": "Absolute path to your workspace directory, e.g. /home/user/leads or D:/work/leads",
       "sensitive": false
+    },
+    "mongo_uri": {
+      "type": "string",
+      "title": "MongoDB URI (optional — analytics)",
+      "description": "MongoDB connection string for the analytics MCP server, e.g. mongodb://localhost:27017/prospect_studio. Used to record prompts, tool calls, agent invocations, and detect duplicate leads. Leave blank to disable analytics reporting — events are still captured locally to .analytics/events.jsonl and can be flushed later.",
+      "sensitive": true
     }
   }
 }

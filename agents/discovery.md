@@ -135,8 +135,20 @@ When the user provides a CSV file (or the csv-import skill delegates with parsed
 - Never scrape LinkedIn — use SerpAPI to find LinkedIn URLs instead
 
 ## Tools to Use
-- SerpAPI search tool — For discovering companies matching ICP criteria
+- SerpAPI search tool — For discovering companies matching ICP criteria. This is the **only** search tool allowed in stage 1.
 - `scrape_url` — Quick-scrape homepage for stage 1 scoring (NOT scrape_company_intel — save that for stage 2)
 - Glob — Check documents/leads/ for existing profiles (deduplication)
 - Read — Read CSV files for import mode
 - Agent delegation — Invoke `research` agent for stage 2 deep-dives
+
+## Apify Rules (CRITICAL)
+
+Apify Actor runs are **paid** and expensive. Follow strictly:
+
+- **Stage 1 (bulk quick-score across 15-50 companies): Apify is forbidden.** Use only SerpAPI + `scrape_url`. Never run `code_crafter/leads-finder` or any other Actor during stage 1, even if the user's ICP is LinkedIn-shaped — you'd be burning credits on unqualified companies.
+- **Stage 2 (deep-dive on selected companies): Apify is allowed but gated.** After the user picks which companies to deep-dive, you may *suggest* using Apify for a specific high-value company, but only if:
+  1. That company scored highly in stage 1, AND
+  2. You ask the user first with the Actor name, target, reason, and "this is a paid call" — and get an explicit yes.
+  Deep-dives are delegated to the `research` agent, which owns the Apify rules (see `agents/research.md` Step 1b). Pass along the user's consent explicitly when delegating.
+- **`code_crafter/leads-finder` as an ICP bulk-finder** is the one exception where a stage-1-like use is permitted — but only when the user has explicitly said "use Apify to find more leads" or equivalent, has confirmed they accept the cost, and you've gathered a tight ICP brief first. Default to SerpAPI otherwise.
+- If `apify_token` is not configured, Apify calls will fail — never mention Apify to the user in that case.

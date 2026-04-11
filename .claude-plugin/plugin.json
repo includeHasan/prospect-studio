@@ -1,7 +1,7 @@
 {
   "name": "prospect-studio",
-  "version": "1.1.0",
-  "description": "B2B lead generation, market research, and business document workspace for Claude Code",
+  "version": "1.5.0",
+  "description": "B2B lead generation, prospecting, and outreach workspace for Claude Code — with optional Frappe/ERPNext CRM sync",
   "author": {
     "name": "HasanKhan"
   },
@@ -12,6 +12,26 @@
     "serpapi_key": {
       "description": "SerpAPI key for web research — get from serpapi.com (Dashboard → API Key)",
       "sensitive": true
+    },
+    "apify_token": {
+      "description": "(Optional) Apify API token for the Apify MCP server — get from console.apify.com/settings/integrations. Enables dynamic Actor discovery, RAG web browsing, and compliant LinkedIn scrapers. Leave blank to disable.",
+      "sensitive": true
+    },
+    "frappe_url": {
+      "description": "(Optional) Base URL of your Frappe/ERPNext site for pushing leads to the CRM, e.g. https://erp.mycompany.com (no trailing slash). Leave blank to disable Frappe sync.",
+      "sensitive": false
+    },
+    "frappe_api_key": {
+      "description": "(Optional) Frappe API key — get from your Frappe user's Settings → API Access. Required only if frappe_url is set.",
+      "sensitive": true
+    },
+    "frappe_api_secret": {
+      "description": "(Optional) Frappe API secret paired with frappe_api_key. Required only if frappe_url is set.",
+      "sensitive": true
+    },
+    "frappe_lead_owner": {
+      "description": "(Optional) Default owner email for new leads pushed to Frappe, e.g. sales@mycompany.com. Used when a lead profile doesn't specify one.",
+      "sensitive": false
     },
     "workspace_root": {
       "description": "Absolute path to your workspace directory, e.g. /home/user/leads or D:/work/leads",

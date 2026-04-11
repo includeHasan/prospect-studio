@@ -1,8 +1,8 @@
 # prospect-studio
 
-> B2B lead generation, market research, and business document workspace for [Claude Code](https://claude.ai/code).
+> B2B lead generation, prospecting, and outreach workspace for [Claude Code](https://claude.ai/code).
 
-A Claude Code plugin with 5 specialized subagents, 10 skills, a web scraper MCP server, and automated workspace tracking — migrated and improved from OpenCode.
+A Claude Code plugin with 6 specialized sales subagents (led by a `sales` strategist that plans and delegates), 10 skills, bundled web-scraper and Frappe/ERPNext MCP servers, and integrations with SerpAPI, Playwright, and Apify — focused exclusively on lead generation.
 
 ---
 
@@ -11,13 +11,15 @@ A Claude Code plugin with 5 specialized subagents, 10 skills, a web scraper MCP 
 | Capability | How |
 |---|---|
 | Research any company as a lead | `research` agent + web scraper + SerpAPI |
+| Bulk-discover prospects for your ICP | `discovery` agent + SerpAPI |
+| Premium LinkedIn / ICP enrichment | Apify MCP (opt-in, paid, confirmation-gated) |
+| **Push leads to Frappe/ERPNext CRM** | Bundled `frappe` MCP — maps lead profile frontmatter directly to Frappe `Lead` DocType |
 | Build 4-touch outreach sequences | `outreach` agent reads lead profiles |
 | Competitive analysis + battlecards | `analyst` agent |
-| PRD/FRD writing | `planning` agent |
-| Document review & feedback | `coach` agent |
-| Morning briefing + pipeline review | skills |
+| Review outreach emails & battlecards | `coach` agent |
+| Morning pipeline briefing | `daily-briefing` skill |
 | Auto-log all activity & searches | PostToolUse hooks |
-| Daily brief on session start | SessionStart hook |
+| Daily pipeline brief on session start | SessionStart hook |
 
 ---
 
@@ -42,8 +44,10 @@ Run these three commands in Claude Code (not the terminal):
 ```
 
 You'll be prompted to enter:
-1. SerpAPI key (stored in OS keychain — never written to disk)
-2. Workspace root path (e.g. `D:/work/leads` or `/home/user/leads`)
+1. **SerpAPI key** — stored in OS keychain, never written to disk
+2. **Apify API token** — *optional, leave blank to skip.* Enables premium LinkedIn & ICP enrichment via four pinned Actors. ⚠️ Paid — always confirmation-gated. Get one from [console.apify.com/settings/integrations](https://console.apify.com/settings/integrations).
+3. **Frappe URL / API key / API secret / lead owner** — *optional, leave blank to skip.* Enables pushing researched leads into a Frappe/ERPNext CRM. Get the key + secret from your Frappe user's Settings → API Access.
+4. **Workspace root path** — e.g. `D:/work/leads` or `/home/user/leads`
 
 **For local install** (if you cloned the repo):
 ```
@@ -71,46 +75,50 @@ This creates the full workspace folder structure and deploys `CLAUDE.md` to your
 ### Skills (invoke directly)
 
 ```
-/prospect-studio:daily-briefing     → Morning standup from workspace state
-/prospect-studio:lead-research      → Research a company as a lead
+/prospect-studio:sales              → ⭐ Talk to the core sales strategist (start here)
+/prospect-studio:daily-briefing     → Morning pipeline briefing
+/prospect-studio:lead-research      → Research a single company as a lead
+/prospect-studio:prospect-discovery → Bulk-discover prospects for your ICP
+/prospect-studio:csv-import         → Import a CSV of companies for enrichment
 /prospect-studio:pipeline-review    → Full pipeline + follow-up recommendations
 /prospect-studio:meeting-notes      → Structured meeting notes + action items
 /prospect-studio:competitive-intel  → Competitive analysis + battlecards
-/prospect-studio:weekly-report      → Weekly status report (+ optional PPTX)
-/prospect-studio:prd-writer         → Create PRD or FRD
-/prospect-studio:task-manager       → Create and track tasks
-/prospect-studio:goal-tracker       → OKR setting and progress tracking
+/prospect-studio:weekly-report      → Weekly pipeline status report (+ optional PPTX)
 ```
 
 ### Natural language (Claude routes automatically)
 
 ```
 "Research Stripe as a lead"
+"Find me leads in fintech"
 "Draft outreach for Acme Corp"
 "Good morning"
 "Who should I follow up with?"
 "Competitive analysis for the CRM market"
-"Create a PRD for user authentication"
 "Coach, review this email"
-"Set Q2 OKRs"
 ```
 
 ---
 
-## Web Scraper
+## Data Sources
 
-The bundled `web-scraper` MCP server scrapes company websites without a browser:
+prospect-studio has four web data sources, tiered by cost:
 
-| Tool | Use |
-|---|---|
-| `scrape_company_intel` | Auto-scrape home/about/pricing/team/contact pages |
-| `scrape_url` | Deep-read a single page |
-| `find_contacts` | Extract emails, phones, social links |
-| `batch_scrape` | 2–20 URLs at once |
+| Source | Use For | Cost |
+|---|---|---|
+| `web-scraper` (bundled) | Company website enrichment — home/about/pricing/team/contact pages | Free |
+| `playwright` MCP | JS-heavy pages the web-scraper can't read | Free |
+| `serpapi` MCP | Search queries, news, funding, finding LinkedIn URLs | Metered |
+| `apify` MCP | LinkedIn employee rosters, profiles, Twitter/X posts, premium ICP bulk-finder | 💰 **Expensive** |
 
-When pages are JS-heavy or bot-protected, the tool returns Playwright MCP instructions automatically. No local Chromium install needed.
+**Apify is opt-in and strictly gated**:
+- Only enabled if you set an `apify_token`
+- Only suggested on high-score leads (`icp_score ≥ 7` or `priority: high/urgent`)
+- The plugin **always** asks you for confirmation before any paid Actor call
+- Forbidden during bulk-discovery stage 1 (quick-scoring) — prevents burning credits on unqualified companies
+- Only four Actors are pinned: `code_crafter/leads-finder`, `harvestapi/linkedin-company-employees`, `dev_fusion/Linkedin-Profile-Scraper`, `apidojo/tweet-scraper`
 
-> **Never scrape LinkedIn** — use SerpAPI to find LinkedIn URLs instead.
+**LinkedIn policy**: never scraped directly by the bundled `web-scraper` or Playwright (TOS + bot blocks). SerpAPI is used to find LinkedIn URLs; Apify is the sanctioned path for actual profile/company data.
 
 ---
 
@@ -123,15 +131,11 @@ your-workspace/
 ├── CLAUDE.md              ← workspace instructions (deployed by setup)
 ├── documents/
 │   ├── leads/             ← YYYY-MM-DD-company-name.md
-│   ├── prd/               ← YYYY-MM-DD-feature-name-prd.md
-│   ├── frd/
-│   ├── tasks/active|completed|backlog/
-│   ├── goals/YYYY/q1-q4/
 │   ├── projects/battlecards/
 │   └── activity-log.md    ← auto-managed
 ├── research/
 │   └── search-log.md      ← auto-managed
-├── notes/daily|meetings|ideas|quick/
+├── notes/daily|meetings|quick/
 └── exports/               ← DOCX, PPTX, XLSX outputs
 ```
 

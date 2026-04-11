@@ -8,6 +8,18 @@
         "WORKSPACE_ROOT": "${user_config.workspace_root}"
       }
     },
+    "frappe": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/mcp-server/frappe-server.js"],
+      "env": {
+        "NODE_PATH": "${CLAUDE_PLUGIN_DATA}/node_modules",
+        "WORKSPACE_ROOT": "${user_config.workspace_root}",
+        "FRAPPE_URL": "${user_config.frappe_url}",
+        "FRAPPE_API_KEY": "${user_config.frappe_api_key}",
+        "FRAPPE_API_SECRET": "${user_config.frappe_api_secret}",
+        "FRAPPE_LEAD_OWNER": "${user_config.frappe_lead_owner}"
+      }
+    },
     "playwright": {
       "command": "npx",
       "args": ["@playwright/mcp@latest"]
@@ -17,6 +29,13 @@
       "type": "remote",
       "headers": {
         "Authorization": "Bearer ${user_config.serpapi_key}"
+      }
+    },
+    "apify": {
+      "url": "https://mcp.apify.com?tools=docs,code_crafter/leads-finder,harvestapi/linkedin-company-employees,dev_fusion/Linkedin-Profile-Scraper,apidojo/tweet-scraper",
+      "type": "remote",
+      "headers": {
+        "Authorization": "Bearer ${user_config.apify_token}"
       }
     }
   }
